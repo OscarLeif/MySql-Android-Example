@@ -12,6 +12,8 @@ import java.util.regex.Pattern;
 
 // Android librarires
 import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -28,11 +30,10 @@ import android.widget.Toast;
 
 import static android.R.id.input;
 
-public class MainActivity extends AppCompatActivity implements Runnable
-{
-    private String hiduke="";
-    private int price=0;
-    private String errmsg="";
+public class MainActivity extends AppCompatActivity implements Runnable {
+    private String hiduke = "";
+    private int price = 0;
+    private String errmsg = "";
 
     public static String TAG = "MySQLDriver";
 
@@ -40,9 +41,11 @@ public class MainActivity extends AppCompatActivity implements Runnable
     private TextInputLayout passwordWrapper;
 
 
+    private Thread connectionThread;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -53,28 +56,25 @@ public class MainActivity extends AppCompatActivity implements Runnable
         //thread.start();
     }
 
-    public void ConnectDatabase()
-    {
+    public void ConnectDatabase() {
         showToastMessage("You touch the button");
-        Thread thread = new Thread(new Runnable(){
+        if (connectionThread.isAlive()) {
+            return;
+        }
+        connectionThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try
-                {
+                try {
                     //Your code goes here
                     Connection con = null;
                     int count = 0;
-                    try
-                    {
+                    try {
                         Class.forName("com.mysql.jdbc.Driver");
-                        con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/upet", "marco", "marco");
-                        MainActivity.this.showToastMessage("Conecction is Working");
-
-                    }
-                    catch (Exception e)
-                    {
+                        con = DriverManager.getConnection("jdbc:mysql://186.0.93.47:3306/upet", "marco", "marco");
+                        MainActivity.this.showToastMessage("connection successful");
+                    } catch (Exception e) {
                         e.printStackTrace();
-                        errmsg=errmsg+e.getMessage();
+                        errmsg = errmsg + e.getMessage();
 
                         //Lets find checkout the reason of the fail
                         //Check if Connections Fails
@@ -84,42 +84,29 @@ public class MainActivity extends AppCompatActivity implements Runnable
                         String regexe = "ETIMEDOUT";
                         String errorConecctionRefuse = "ECONNREFUSED";
 
-                        // Step 1: Allocate a Pattern object to compile a regexe
-                        Pattern pattern = Pattern.compile(regexe);
-                        //Pattern pattern = Pattern.compile(regexe, Pattern.CASE_INSENSITIVE);  // case-insensitive matching
-
-                        // Step 2: Allocate a Matcher object from the compiled regexe pattern,
-                        //         and provide the input to the Matcher
-                        Matcher matcher = pattern.matcher(s);
-
-                        if (matcher.matches())
-                        {
-                            MainActivity.this.showToastMessage("Time Out Conecction is server online ?");
-                        }
-
-                        else if(s.matches("ECONNREFUSED"))
-                        {
-                            MainActivity.this.showToastMessage("Conecction Refused !!");
-                        }
-                        else
-                        {
+                        if (Pattern.compile("ECONNREFUSED").matcher(errmsg).find()) {
+                            //MainActivity.this.showToastMessage("Connection refused. Check IP and ports server");
+                            ShowErrorDialog("Connection refused. Check IP and ports server\"");
+                        } else if (Pattern.compile("ETIMEDOUT").matcher(errmsg).find()) {
+                            //MainActivity.this.showToastMessage("Time Out Connection. Is DB Server online ?");
+                            ShowErrorDialog("Time Out Connection. Is DB Server online ?");
+                        } else {
                             MainActivity.this.showToastMessage("Something Fails");
                         }
-
                     }
 
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
             }
         });
-        thread.start();
+        connectionThread.start();
+
+
 
     }
 
-    public void showToastMessage(final String message)
-    {
+    public void showToastMessage(final String message) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -129,24 +116,38 @@ public class MainActivity extends AppCompatActivity implements Runnable
     }
 
 
-
-    public void onClickLoggin(View view)
-    {
+    public void onClickLoggin(View view) {
         Toast.makeText(this, "Click Button", Toast.LENGTH_SHORT);
         ConnectDatabase();
     }
 
+    public void ShowErrorDialog(final String errorMessage) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage(errorMessage)
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do things
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
 
 
     public void run() {
         System.out.println("Select Records Example by using the Prepared Statement!");
         Connection con = null;
         int count = 0;
-        try
-        {
+        try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://186.0.93.47:3306/upet","marco","marco");
-                    //("jdbc:mysql://10.0.2.2:3306/stock","root","root");
+            con = DriverManager.getConnection("jdbc:mysql://186.0.93.47:3306/upet", "marco", "marco");
+            //("jdbc:mysql://10.0.2.2:3306/stock","root","root");
 
             /*try{
                 String sql;
@@ -173,29 +174,35 @@ public class MainActivity extends AppCompatActivity implements Runnable
                 errmsg=errmsg+s.getMessage();
 
             }*/
-            Log.d("TAG MYSQL","The Conecction should we work");
+            Log.d("TAG MYSQL", "The Conecction should we work");
             showToastMessage("Connection Working");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            errmsg=errmsg+e.getMessage();
+            errmsg = errmsg + e.getMessage();
         }
 
         handler.sendEmptyMessage(0);
 
     }
 
-    private Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-
+    //TODO not mandatory to use. Clean
+    private Handler handler = new Handler()
+    {
+        public void handleMessage(Message msg)
+        {
             //TextView textView = (TextView) findViewById(R.id.textView0);
             //textView.setText("hiduke="+hiduke+" price="+price+" "+errmsg);
-
         }
     };
 
-    public static String exceptionStacktraceToString(Exception e)
+    /*
+        Signs up a user
+        Requires Name, las name, email, password, retype password
+     */
+    private void SignUp(String name,String email, String password, String retypePassword)
     {
-        return Arrays.toString(e.getStackTrace());
+        //First make a connection to the data base
+       //Or check that the thread conecction is alive who works better !!!
+        
     }
 }
