@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MySqlExample</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="title_activity_loggin">LogginActivity</string>
 </resources>
