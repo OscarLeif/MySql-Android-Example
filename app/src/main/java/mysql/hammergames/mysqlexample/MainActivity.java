@@ -45,6 +45,7 @@ public class MainActivity extends BaseActivity
 
         //Thread thread = new Thread(this);
         //thread.start();
+        ConnectDatabase();
     }
 
     public void ConnectDatabase()
@@ -68,8 +69,16 @@ public class MainActivity extends BaseActivity
     public void onClickSignIn(View view)
     {
         ///SignUpActivity("","","","");
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+        if (conRunner.IsConnected())
+        {
+            Intent intent = new Intent(this, SignUpActivity.class);
+            startActivity(intent);
+        }
+        else
+        {
+            ShowMessageDialog("Not Connected to the server");
+        }
+
     }
 
     private Boolean CheckConnection(Connection conection)
