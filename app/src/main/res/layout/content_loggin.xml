@@ -37,26 +37,26 @@
         android:weightSum="1">
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/usernameWrapper"
+            android:id="@+id/userEmailWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"></LinearLayout>
 
             <EditText
                 android:id="@+id/userEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email Address"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
 
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/userLastNameWrapper"
+            android:id="@+id/userPasswordWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"/>
 
         </android.support.design.widget.TextInputLayout>
 
@@ -80,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
-                android:text="Forgot Password" />
+                android:onClick="OnClickForgotPassword"
+                android:text="Forgot Password"/>
 
             <Button
                 android:id="@+id/btnLogin"
@@ -88,7 +89,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_weight="1"
-                android:text="Login" />
+                android:onClick="OnClickLogin"
+                android:text="Login"/>
         </LinearLayout>
 
     </LinearLayout>

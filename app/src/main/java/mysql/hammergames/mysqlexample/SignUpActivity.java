@@ -15,15 +15,14 @@ import java.sql.Connection;
 public class SignUpActivity extends BaseActivity
 {
 
-    private TextInputLayout userNameWrapper ;
-    private TextInputLayout userLastNameWrapper ;
+    private TextInputLayout userNameWrapper;
+    private TextInputLayout userLastNameWrapper;
     private TextInputLayout userEmailWrapper;
-    private TextInputLayout userPasswordWrapper ;
+    private TextInputLayout userPasswordWrapper;
 
     private Thread thread;
     private Connection conecction;
     private ConnectionRunner conectionRunner;
-
 
 
     @Override
@@ -39,22 +38,19 @@ public class SignUpActivity extends BaseActivity
 
         //conectionRunner = new ConnectionRunner(this);
         conectionRunner = new ConnectionRunner(this);
-        thread = new Thread(conectionRunner,"T2");
+        thread = new Thread(conectionRunner, "T2");
         thread.start();
     }
 
     private void SignUpNewUser()
     {
-
-
-        String name,lastName,Email,password;
+        String name, lastName, Email, password;
         name = userNameWrapper.getEditText().getText().toString();
         lastName = userLastNameWrapper.getEditText().getText().toString();
         Email = userEmailWrapper.getEditText().getText().toString();
         password = userPasswordWrapper.getEditText().getText().toString();
 
-        conectionRunner.RegisterNewUser(name,"","");
-
+        conectionRunner.RegisterNewUser(name, "", "");
     }
 
     public void onClickSignUp(View v)
@@ -69,26 +65,27 @@ public class SignUpActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
-        String name,lastName,Email,password;
+        String name, lastName, Email, password;
         name = userNameWrapper.getEditText().getText().toString();
         lastName = userLastNameWrapper.getEditText().getText().toString();
         Email = userEmailWrapper.getEditText().getText().toString();
         password = userPasswordWrapper.getEditText().getText().toString();
 
-        if(name.isEmpty() && lastName.isEmpty() && Email.isEmpty() && password.isEmpty() )
+        if (name.isEmpty() && lastName.isEmpty() && Email.isEmpty() && password.isEmpty())
         {
             super.onBackPressed();
-        }
-        else
+        } else
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
             builder.setTitle("Confirm");
             builder.setMessage("Are you sure you want to quit?");
 
-            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            builder.setPositiveButton("YES", new DialogInterface.OnClickListener()
+            {
 
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(DialogInterface dialog, int which)
+                {
                     // Do nothing but close the dialog
 
                     //dialog.dismiss();
@@ -96,10 +93,12 @@ public class SignUpActivity extends BaseActivity
                 }
             });
 
-            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("NO", new DialogInterface.OnClickListener()
+            {
 
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(DialogInterface dialog, int which)
+                {
 
                     // Do nothing
                     dialog.dismiss();

@@ -2,6 +2,7 @@ package mysql.hammergames.mysqlexample;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -11,7 +12,12 @@ import android.widget.Toast;
 
 public class BaseActivity extends AppCompatActivity
 {
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
 
+    }
 
     public void ShowMessageDialog(final String errorMessage) {
         this.runOnUiThread(new Runnable() {
@@ -36,6 +42,16 @@ public class BaseActivity extends AppCompatActivity
             @Override
             public void run() {
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void ShowToastWithMessage(final String message, int LengtTime)
+    {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         });
     }

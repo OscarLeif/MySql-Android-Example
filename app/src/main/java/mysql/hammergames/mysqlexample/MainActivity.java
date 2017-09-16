@@ -17,6 +17,10 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+/**
+ * Main Activity Class
+ * Check activity_main.xml is the layout of this activity
+ */
 public class MainActivity extends BaseActivity
 {
     private String hiduke = "";
@@ -25,9 +29,8 @@ public class MainActivity extends BaseActivity
 
     public static String TAG = "MySQLDriver";
 
-    private TextInputLayout usernameWrapper;
-    private TextInputLayout passwordWrapper;
-
+    //private TextInputLayout usernameWrapper;
+    //private TextInputLayout passwordWrapper;
 
     //Connections and thread variable
     private Connection connection;
@@ -40,22 +43,27 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //usernameWrapper = (TextInputLayout) findViewById(R.id.usernameWrapper);
-        //passwordWrapper = (TextInputLayout) findViewById(R.id.passwordWrapper);
-
-        //Thread thread = new Thread(this);
-        //thread.start();
         ConnectDatabase();
     }
 
+    /**
+     * Connect to our Database, this will automatically start
+     * a New Thread and the Runnable methods are inside the Class
+     * Connection Runner. This handle the connections and SQL commands
+     */
+
     public void ConnectDatabase()
     {
-        ShowToastWithMessage("You touch the button");
-
         conRunner = new ConnectionRunner(this);
         Thread t1 = new Thread(conRunner, "T1");
         t1.start();
     }
+
+    /**
+     * Open a new Activity for Loggin an existing user
+     * This will clean upo our actual thread
+     * @param view
+     */
 
     public void onClickLoggin(View view)
     {
@@ -66,9 +74,12 @@ public class MainActivity extends BaseActivity
         startActivity(intent);
     }
 
+    /**
+     * Button Event Click
+     * @param view
+     */
     public void onClickSignIn(View view)
     {
-        ///SignUpActivity("","","","");
         if (conRunner.IsConnected())
         {
             Intent intent = new Intent(this, SignUpActivity.class);
@@ -78,9 +89,18 @@ public class MainActivity extends BaseActivity
         {
             ShowMessageDialog("Not Connected to the server");
         }
-
     }
 
+    public void onClickFacebookLogin(View view)
+    {
+        ShowToastWithMessage("TODO implement facebook login /ᐠ｡ꞈ｡ᐟ\\");
+    }
+
+    /**
+     * Just send a simple query to check is DB is online
+     * @param conection
+     * @return
+     */
     private Boolean CheckConnection(Connection conection)
     {
         boolean isConected = false;
@@ -103,20 +123,5 @@ public class MainActivity extends BaseActivity
             return isConected;
         }
         return isConected;
-    }
-
-    /*
-        Signs up a user
-        Requires Name, las name, email, password, retype password
-     */
-    private void SignUp(String name, String email, String password, String retypePassword)
-    {
-        if (conRunner != null)
-        {
-            conRunner.RegisterNewUser(usernameWrapper.getEditText().getText().toString(), "", "");
-        } else
-        {
-            ShowToastWithMessage("Connect First");
-        }
     }
 }
