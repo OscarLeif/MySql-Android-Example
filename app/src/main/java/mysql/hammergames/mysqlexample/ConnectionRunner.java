@@ -68,11 +68,11 @@ public class ConnectionRunner implements Runnable
 
             if (Pattern.compile("ECONNREFUSED").matcher(errmsg).find()) {
                 //MainActivity.this.showToastMessage("Connection refused. Check IP and ports server");
-                mainAct.ShowMessageDialog("Connection refused. Check IP and ports server\"");
+                mainAct.ShowToastWithMessage("Connection refused. Check IP and ports server\"");
             } else if (Pattern.compile("ETIMEDOUT").matcher(errmsg).find())
             {
                 //MainActivity.this.showToastMessage("Time Out Connection. Is DB Server online ?");
-                mainAct.ShowMessageDialog(("Time Out Connection. Is DB Server online ?"));
+                mainAct.ShowToastWithMessage(("Time Out Connection. Is DB Server online ?"));
             } else {
                 mainAct.ShowToastWithMessage("Something Fails");
             }

@@ -50,13 +50,18 @@ public class SignUpActivity extends BaseActivity
         Email = userEmailWrapper.getEditText().getText().toString();
         password = userPasswordWrapper.getEditText().getText().toString();
 
-        conectionRunner.RegisterNewUser(name, "", "");
+        if(name.isEmpty() && lastName.isEmpty() && Email.isEmpty() && password.isEmpty())
+        {
+            RegisterTask dialog = new RegisterTask(this,"Please fill all the values");
+            dialog.execute();
+        }
+        //conectionRunner.RegisterNewUser(name, "", "");
     }
 
     public void onClickSignUp(View v)
     {
         SignUpNewUser();
-        OnBackPressEmu();
+        //OnBackPressEmu();
     }
 
     //This should close the activity if all the UI elements are empty.

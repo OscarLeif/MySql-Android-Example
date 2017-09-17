@@ -80,14 +80,15 @@ public class MainActivity extends BaseActivity
      */
     public void onClickSignIn(View view)
     {
-        if (conRunner.IsConnected())
+        //if (conRunner.IsConnected())
         {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivity(intent);
         }
-        else
+        //else
         {
-            ShowMessageDialog("Not Connected to the server");
+            //RegisterTask a = new RegisterTask(this, "No connection DB");
+            //a.execute();
         }
     }
 
